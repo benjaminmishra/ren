@@ -61,6 +61,6 @@ struct FileDetailsSheet: View {
                 .listStyle(.inset)
             }
         }
-        .frame(minWidth: 540, minHeight: 360)
+        .frame(minWidth: 460, minHeight: 340)
     }
 }

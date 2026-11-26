@@ -7,7 +7,7 @@ public struct DashboardView: View {
     @State private var isWidgetMode = false
 
     private static let widgetSize = CGSize(width: 220, height: 240)
-    private static let dashboardSize = CGSize(width: 580, height: 400)
+    private static let dashboardSize = CGSize(width: 460, height: 370)
 
     public init(vm: CleanerViewModel) {
         self.vm = vm
@@ -23,7 +23,7 @@ public struct DashboardView: View {
             Theme.slateBackground.opacity(0.72)
                 .ignoresSafeArea()
 
-            WindowAccessor()
+            WindowAccessor(initialSize: Self.dashboardSize)
                 .frame(width: 0, height: 0)
 
             if isWidgetMode {
@@ -47,24 +47,24 @@ public struct DashboardView: View {
     private var fullDashboardView: some View {
         VStack(spacing: 0) {
             headerBar
-                .padding(.horizontal, 24)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
+                .padding(.horizontal, 18)
+                .padding(.top, 14)
+                .padding(.bottom, 6)
 
             // Consistent two-column layout so the donut never shifts when results arrive
-            HStack(alignment: .center, spacing: 24) {
+            HStack(alignment: .center, spacing: 18) {
                 leftDonutColumn
-                    .frame(width: 185)
+                    .frame(width: 160)
 
                 rightContentColumn
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 6)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             footerBar
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 18)
                 .padding(.vertical, 10)
         }
     }
@@ -241,10 +241,10 @@ public struct DashboardView: View {
                     }
                 }
             }
-            .frame(width: 145, height: 145)
+            .frame(width: 135, height: 135)
 
             primaryActionButton
-                .frame(width: 175)
+                .frame(width: 155)
         }
     }
 
@@ -253,7 +253,7 @@ public struct DashboardView: View {
         switch vm.state {
         case .idle:
             LiquidGlassButton(
-                title: "Start Smart Scan",
+                title: "Start Scan",
                 icon: "sparkles",
                 gradientColors: Theme.scanGradient,
                 isEnabled: true,
@@ -297,15 +297,15 @@ public struct DashboardView: View {
         Circle()
             .strokeBorder(
                 LinearGradient(colors: [topColor, bottomColor], startPoint: .top, endPoint: .bottom),
-                lineWidth: 16
+                lineWidth: 15
             )
-            .frame(width: 145, height: 145)
+            .frame(width: 135, height: 135)
     }
 
     private func donutPodView(sublabel: String) -> some View {
         ZStack {
-            DonutChartView(slices: vm.chartSlices, strokeWidth: 16)
-                .frame(width: 145, height: 145)
+            DonutChartView(slices: vm.chartSlices, strokeWidth: 15)
+                .frame(width: 135, height: 135)
 
             ZStack {
                 Circle()

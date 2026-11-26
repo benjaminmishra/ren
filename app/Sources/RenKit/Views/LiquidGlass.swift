@@ -74,8 +74,11 @@ struct VisualEffectBackground: NSViewRepresentable {
 
 // MARK: - Window Translucency Accessor
 struct WindowAccessor: NSViewRepresentable {
+    var initialSize: CGSize
+
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
+        let size = initialSize
         DispatchQueue.main.async { [weak view] in
             if let window = view?.window {
                 window.isOpaque = false
@@ -84,6 +87,7 @@ struct WindowAccessor: NSViewRepresentable {
                 window.titleVisibility = .hidden
                 window.styleMask.insert(.fullSizeContentView)
                 window.isMovableByWindowBackground = true
+                window.setContentSize(size)
             }
         }
         return view
