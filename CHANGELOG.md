@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.0 — About Window & Compact Layout
+
+### What's New
+- **Liquid-Glass About Ren Sheet**: Added a frosted-glass About sheet showing the Ren Swedish logo, dynamic app version badge, open-source license, and direct links to the GitHub repository and Releases page.
+  - Accessible by clicking **`Ren v0.2.0`** in the dashboard header, via the macOS **Menu Bar** dropdown (`About Ren`), or from the standard **Ren ➔ About Ren** app menu.
+- **Slimmer Default Window**: Narrowed the default dashboard window from `580 × 400` to a tighter **`460 × 370`** with proportional `135 pt` donut geometry and matched file-inspection sheet width.
+
+### Installation
+1. Download `Ren-v0.2.0-macos-universal.dmg` (or `.zip`) from the assets below.
+2. Drag **Ren.app** into your **Applications** folder.
+3. Right-click **Ren.app** ➔ **Open** on first launch (or run `xattr -cr /Applications/Ren.app`).
+
 ## v0.1.0 — Initial Release
 
 First public open-source release of **Ren** *(Swedish: clean, pure)* — a lightweight (~1.4 MB), frosted-glass macOS cleaner powered by a parallel Rust engine and native SwiftUI.
