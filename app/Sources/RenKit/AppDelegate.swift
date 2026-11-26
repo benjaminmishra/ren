@@ -5,6 +5,7 @@ import AppKit
 public class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     public var onRescan: (() -> Void)?
+    public var onAbout: (() -> Void)?
 
     public func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -67,6 +68,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Open Dashboard", action: #selector(openApp), keyEquivalent: "o"))
         menu.addItem(NSMenuItem(title: "Rescan Storage", action: #selector(triggerScan), keyEquivalent: "r"))
+        menu.addItem(NSMenuItem(title: "About Ren", action: #selector(showAbout), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Quit Ren", action: #selector(quitApp), keyEquivalent: "q"))
 
@@ -83,6 +85,11 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
     @objc public func triggerScan() {
         openApp()
         onRescan?()
+    }
+
+    @objc public func showAbout() {
+        openApp()
+        onAbout?()
     }
 
     @objc public func quitApp() {

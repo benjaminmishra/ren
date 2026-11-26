@@ -113,6 +113,8 @@ public enum AppInfo {
     public static var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.0"
     }
+    public static let repoURL = URL(string: "https://github.com/benjaminmishra/ren")!
+    public static let releasesURL = URL(string: "https://github.com/benjaminmishra/ren/releases")!
 }
 
 public extension UInt64 {

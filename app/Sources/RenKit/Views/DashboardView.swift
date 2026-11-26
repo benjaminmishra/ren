@@ -41,6 +41,9 @@ public struct DashboardView: View {
         .sheet(isPresented: $showingDetails) {
             FileDetailsSheet(vm: vm, isPresented: $showingDetails)
         }
+        .sheet(isPresented: $vm.showingAbout) {
+            AboutSheet(isPresented: $vm.showingAbout)
+        }
     }
 
     // MARK: - Full Compact Dashboard View
@@ -72,19 +75,23 @@ public struct DashboardView: View {
     // MARK: - Header Bar
     private var headerBar: some View {
         HStack(alignment: .center) {
-            HStack(spacing: 8) {
-                RenLogoMark(size: 16)
+            Button(action: { vm.showingAbout = true }) {
+                HStack(spacing: 8) {
+                    RenLogoMark(size: 16)
 
-                HStack(alignment: .firstTextBaseline, spacing: 5) {
-                    Text("Ren")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-                        .foregroundColor(.white)
+                    HStack(alignment: .firstTextBaseline, spacing: 5) {
+                        Text("Ren")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white)
 
-                    Text("v\(AppInfo.version)")
-                        .font(.system(size: 9, weight: .medium, design: .monospaced))
-                        .foregroundColor(Theme.textMuted.opacity(0.6))
+                        Text("v\(AppInfo.version)")
+                            .font(.system(size: 9, weight: .medium, design: .monospaced))
+                            .foregroundColor(Theme.textMuted.opacity(0.6))
+                    }
                 }
             }
+            .buttonStyle(.plain)
+            .help("About Ren")
 
             Spacer()
 

@@ -15,8 +15,18 @@ struct RenApp: App {
                     appDelegate.onRescan = { [weak viewModel] in
                         viewModel?.startScan()
                     }
+                    appDelegate.onAbout = { [weak viewModel] in
+                        viewModel?.showingAbout = true
+                    }
                 }
         }
         .windowStyle(.hiddenTitleBar)
+        .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About Ren") {
+                    vm.showingAbout = true
+                }
+            }
+        }
     }
 }

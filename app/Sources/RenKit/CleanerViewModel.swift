@@ -38,6 +38,7 @@ public final class CleanerViewModel: ObservableObject {
     @Published public var scanningCategory: CleanCategory? = nil
     @Published public var completedCategories: Set<CleanCategory> = []
     @Published public var isAdvancedMode: Bool = false
+    @Published public var showingAbout: Bool = false
 
     private var scanTask: Task<Void, Never>?
     private var cleanTask: Task<Void, Never>?
