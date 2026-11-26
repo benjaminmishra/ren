@@ -75,9 +75,15 @@ public struct DashboardView: View {
             HStack(spacing: 8) {
                 RenLogoMark(size: 16)
 
-                Text("Ren")
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white)
+                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                    Text("Ren")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white)
+
+                    Text("v\(AppInfo.version)")
+                        .font(.system(size: 9, weight: .medium, design: .monospaced))
+                        .foregroundColor(Theme.textMuted.opacity(0.6))
+                }
             }
 
             Spacer()

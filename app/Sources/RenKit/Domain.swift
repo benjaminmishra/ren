@@ -109,6 +109,12 @@ public struct TrashResult: Codable {
     public let errorMessage: String?
 }
 
+public enum AppInfo {
+    public static var version: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.1.0"
+    }
+}
+
 public extension UInt64 {
     var formattedByteSize: String {
         ByteCountFormatter.string(fromByteCount: Int64(self), countStyle: .file)

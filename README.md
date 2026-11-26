@@ -46,6 +46,14 @@ build.sh              # One-command release bundler -> dist/Ren.app
 
 ---
 
+### Download
+
+Grab the latest Universal macOS package (`.dmg` or `.zip` for Apple Silicon & Intel) from **[GitHub Releases](https://github.com/benjaminmishra/ren/releases/latest)**.
+
+> **First launch note**: Ren is ad-hoc signed rather than notarized with a paid Apple Developer ID. Right-click `Ren.app` ➔ **Open** on first launch, or run `xattr -cr /Applications/Ren.app`.
+
+---
+
 ### Building from Source
 
 #### Prerequisites

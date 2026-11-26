@@ -50,10 +50,18 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
 
         let titleItem = NSMenuItem(title: "Ren", action: nil, keyEquivalent: "")
-        titleItem.attributedTitle = NSAttributedString(
+        let attributed = NSMutableAttributedString(
             string: "Ren",
             attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]
         )
+        attributed.append(NSAttributedString(
+            string: "  v\(AppInfo.version)",
+            attributes: [
+                .font: NSFont.monospacedSystemFont(ofSize: 10, weight: .regular),
+                .foregroundColor: NSColor.secondaryLabelColor
+            ]
+        ))
+        titleItem.attributedTitle = attributed
         menu.addItem(titleItem)
 
         menu.addItem(NSMenuItem.separator())
