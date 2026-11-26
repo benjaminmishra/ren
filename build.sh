@@ -14,22 +14,25 @@ if [ "${UNIVERSAL:-0}" = "1" ]; then
     cargo build --release --target aarch64-apple-darwin ${CARGO_FLAGS:-}
     cargo build --release --target x86_64-apple-darwin ${CARGO_FLAGS:-}
     mkdir -p "$DIR/core/target/release"
+    install_name_tool -id "@rpath/libcleaner_core.dylib" "$DIR/core/target/aarch64-apple-darwin/release/libcleaner_core.dylib"
+    install_name_tool -id "@rpath/libcleaner_core.dylib" "$DIR/core/target/x86_64-apple-darwin/release/libcleaner_core.dylib"
     lipo -create \
         "$DIR/core/target/aarch64-apple-darwin/release/libcleaner_core.dylib" \
         "$DIR/core/target/x86_64-apple-darwin/release/libcleaner_core.dylib" \
         -output "$DIR/core/target/release/libcleaner_core.dylib"
 else
     cargo build --release ${CARGO_FLAGS:-}
+    install_name_tool -id "@rpath/libcleaner_core.dylib" "$DIR/core/target/release/libcleaner_core.dylib"
 fi
 
 echo "🍏 2. Building Native SwiftUI App (release, size-optimized)..."
 cd "$DIR/app"
 if [ "${UNIVERSAL:-0}" = "1" ]; then
     swift build -c release --arch arm64 --arch x86_64 -Xswiftc -Osize -Xlinker -dead_strip
-    SWIFT_BIN="$DIR/app/.build/apple/Products/Release/Ren"
+    SWIFT_BIN="$(swift build -c release --arch arm64 --arch x86_64 --show-bin-path)/Ren"
 else
     swift build -c release -Xswiftc -Osize -Xlinker -dead_strip
-    SWIFT_BIN="$DIR/app/.build/release/Ren"
+    SWIFT_BIN="$(swift build -c release --show-bin-path)/Ren"
 fi
 
 echo "📦 3. Assembling Ren.app bundle..."
@@ -46,14 +49,11 @@ if [ -f "$DIR/assets/AppIcon.icns" ]; then
     cp "$DIR/assets/AppIcon.icns" "$APP_DIR/Contents/Resources/AppIcon.icns"
 fi
 
-# Rewrite embedded dylib path so Ren.app is fully relocatable
-OLD_DYLIB="$(otool -L "$APP_DIR/Contents/MacOS/Ren" | awk '/libcleaner_core\.dylib/ {print $1; exit}')"
-if [ -n "$OLD_DYLIB" ]; then
-    install_name_tool -change \
-      "$OLD_DYLIB" \
-      "@executable_path/../Frameworks/libcleaner_core.dylib" \
-      "$APP_DIR/Contents/MacOS/Ren"
-fi
+# Rewrite embedded dylib path so Ren.app is fully relocatable across all architectures
+install_name_tool -change \
+  "@rpath/libcleaner_core.dylib" \
+  "@executable_path/../Frameworks/libcleaner_core.dylib" \
+  "$APP_DIR/Contents/MacOS/Ren"
 
 # Strip local/debug symbol tables to minimize bundle size
 strip "$APP_DIR/Contents/MacOS/Ren"
@@ -103,11 +103,17 @@ if [ "${PACKAGE:-0}" = "1" ]; then
     # ZIP archive (preserves macOS bundle metadata)
     ditto -c -k --sequesterRsrc --keepParent "$APP_DIR" "${PKG_BASE}.zip"
 
-    # DMG with /Applications drag-and-drop symlink
+    # DMG with /Applications drag-and-drop symlink (retry guards against macOS CI 'Resource busy')
     DMG_STAGE="$(mktemp -d)"
     cp -R "$APP_DIR" "$DMG_STAGE/Ren.app"
     ln -s /Applications "$DMG_STAGE/Applications"
-    hdiutil create -volname "Ren ${APP_VERSION}" -srcfolder "$DMG_STAGE" -ov -format UDZO "${PKG_BASE}.dmg" >/dev/null
+    for attempt in 1 2 3; do
+        if hdiutil create -volname "Ren ${APP_VERSION}" -srcfolder "$DMG_STAGE" -ov -format UDZO "${PKG_BASE}.dmg" >/dev/null; then
+            break
+        fi
+        [ "$attempt" -eq 3 ] && exit 1
+        sleep 3
+    done
     rm -rf "$DMG_STAGE"
 
     (cd "$DIR/dist" && shasum -a 256 "$(basename "${PKG_BASE}.dmg")" "$(basename "${PKG_BASE}.zip")" > "$(basename "${PKG_BASE}.sha256")")
